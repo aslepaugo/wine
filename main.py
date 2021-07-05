@@ -7,7 +7,6 @@ import collections
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import pandas
-import pprint
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -34,7 +33,7 @@ def get_wine_catalogue(file_path: str) -> list[dict]:
 
     wine_catalogue_grouped = collections.defaultdict(list)
     for wine_card in wine_catalogue:
-            wine_catalogue_grouped[wine_card['category']].append(wine_card)
+        wine_catalogue_grouped[wine_card['category']].append(wine_card)
 
     return dict(sorted(wine_catalogue_grouped.items()))
 
