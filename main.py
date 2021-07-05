@@ -36,8 +36,7 @@ def get_wine_catalogue(file_path: str) -> list[dict]:
     for wine_card in wine_catalogue:
             wine_catalogue_grouped[wine_card['category']].append(wine_card)
 
-    pprint.pprint(wine_catalogue_grouped)
-    return wine_catalogue_grouped
+    return dict(sorted(wine_catalogue_grouped.items()))
 
 
 def get_age_years_ru() -> str:
