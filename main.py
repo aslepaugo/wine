@@ -1,10 +1,34 @@
+"""
+Main module.
+All changes based on original forked version.
+Website is written in educational goals.
+"""
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import pandas
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 FOUNDATION_YEAR = 1920
+WINE_CATALOGUE_FILE = 'wine.xlsx'
+
+def get_wine_catalogue(file_path: str) -> list[dict]:
+    """
+    Return a list of cards of wine (dictionaries)
+    """
+    wine_catalogue_df = pandas.read_excel(file_path)
+    wine_catalogue_df = wine_catalogue_df.rename(
+        columns={
+                'Название': 'name',
+                'Сорт': 'grape_variety',
+                'Цена': 'cost',
+                }
+        )
+    wine_catalogue_df = wine_catalogue_df.to_dict('records')
+
+    return wine_catalogue_df
+
 
 def get_age_years_ru() -> str:
     """
@@ -31,9 +55,11 @@ def template_render() -> None:
                       autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('template.html')
     age_years_ru = get_age_years_ru()
-    rendered_page = template.render(age_years_ru=age_years_ru)
-    with open('index.html', 'w', encoding='utf8') as f:
-        f.write(rendered_page)
+    wine_cards = get_wine_catalogue(WINE_CATALOGUE_FILE)
+    rendered_page = template.render(age_years_ru=age_years_ru, wine_cards=wine_cards)
+
+    with open('index.html', 'w', encoding='utf8') as rendered_file:
+        rendered_file.write(rendered_page)
 
 
 if __name__ == '__main__':
