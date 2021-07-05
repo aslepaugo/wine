@@ -3,31 +3,41 @@ Main module.
 All changes based on original forked version.
 Website is written in educational goals.
 """
+import collections
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import pandas
+import pprint
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 FOUNDATION_YEAR = 1920
-WINE_CATALOGUE_FILE = 'wine.xlsx'
+WINE_CATALOGUE_FILE = 'wine3.xlsx'
 
 def get_wine_catalogue(file_path: str) -> list[dict]:
     """
     Return a list of cards of wine (dictionaries)
     """
-    wine_catalogue_df = pandas.read_excel(file_path)
+    wine_catalogue_df = pandas.read_excel(file_path, keep_default_na=False)
     wine_catalogue_df = wine_catalogue_df.rename(
         columns={
                 'Название': 'name',
                 'Сорт': 'grape_variety',
                 'Цена': 'cost',
+                'Категория': 'category',
+                'Картинка': 'image',
+                'Акция': 'special_offer',
                 }
         )
-    wine_catalogue_df = wine_catalogue_df.to_dict('records')
+    wine_catalogue = wine_catalogue_df.to_dict('records')
 
-    return wine_catalogue_df
+    wine_catalogue_grouped = collections.defaultdict(list)
+    for wine_card in wine_catalogue:
+            wine_catalogue_grouped[wine_card['category']].append(wine_card)
+
+    pprint.pprint(wine_catalogue_grouped)
+    return wine_catalogue_grouped
 
 
 def get_age_years_ru() -> str:
@@ -64,5 +74,6 @@ def template_render() -> None:
 
 if __name__ == '__main__':
     template_render()
+
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
