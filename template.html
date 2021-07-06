@@ -125,17 +125,17 @@
             {% for wine_card in wine_cards_in_category %}
               <div class="col-lg-4 mb-5 col-md-6">
                 <div class="wine_v_1 text-center pb-4 pt-5">
-                  <img src="images/{{wine_card.image}}" alt="{{wine_card.image}}" class="img-fluid">
-                  {% if wine_card.special_offer %}
+                  <img src="images/{{wine_card.Картинка}}" alt="{{wine_card.Картинка}}" class="img-fluid">
+                  {% if wine_card.Акция %}
                     <img src="assets/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
                   {% endif %}
                   <div>
-                    <h3 class="heading mt-3 mb-3 text-dark">{{wine_card.name}}</h3>
+                    <h3 class="heading mt-3 mb-3 text-dark">{{wine_card.Название}}</h3>
                     <p>
-                    {% if wine_card.grape_variety %}
-                      Сорт винограда - {{wine_card.grape_variety}}<br/>
+                    {% if wine_card.Сорт %}
+                      Сорт винограда - {{wine_card.Сорт}}<br/>
                     {% endif %}
-                      <span class="price">{{wine_card.cost|round|int}} р.</span>
+                      <span class="price">{{wine_card.Цена}} р.</span>
                     </p>
                   </div>
                 </div>

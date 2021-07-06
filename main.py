@@ -1,8 +1,3 @@
-"""
-Main module.
-All changes based on original forked version.
-Website is written in educational goals.
-"""
 import collections
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -12,28 +7,18 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 FOUNDATION_YEAR = 1920
-WINE_CATALOGUE_FILE = 'wine3.xlsx'
+WINE_CATALOGUE_FILE_PATH = 'catalogue/wine.xlsx'
 
-def get_wine_catalogue(file_path: str) -> list[dict]:
+def get_wine_catalogue(file_path):
     """
-    Return a list of cards of wine (dictionaries)
+    Return a list of cards of wine from catalogue
     """
     wine_catalogue_df = pandas.read_excel(file_path, keep_default_na=False)
-    wine_catalogue_df = wine_catalogue_df.rename(
-        columns={
-                'Название': 'name',
-                'Сорт': 'grape_variety',
-                'Цена': 'cost',
-                'Категория': 'category',
-                'Картинка': 'image',
-                'Акция': 'special_offer',
-                }
-        )
     wine_catalogue = wine_catalogue_df.to_dict('records')
 
     wine_catalogue_grouped = collections.defaultdict(list)
     for wine_card in wine_catalogue:
-        wine_catalogue_grouped[wine_card['category']].append(wine_card)
+        wine_catalogue_grouped[wine_card['Категория']].append(wine_card)
 
     return dict(sorted(wine_catalogue_grouped.items()))
 
@@ -63,7 +48,7 @@ def template_render() -> None:
                       autoescape=select_autoescape(['html', 'xml']))
     template = env.get_template('template.html')
     age_years_ru = get_age_years_ru()
-    wine_cards = get_wine_catalogue(WINE_CATALOGUE_FILE)
+    wine_cards = get_wine_catalogue(WINE_CATALOGUE_FILE_PATH)
     rendered_page = template.render(age_years_ru=age_years_ru, wine_cards=wine_cards)
 
     with open('index.html', 'w', encoding='utf8') as rendered_file:

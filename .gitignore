@@ -1,4 +1,5 @@
 env/
 .vscode/
 *.xlsx
+!catalogue/wine.xlsx
 index.html
